@@ -2,6 +2,6 @@
 {
     public interface ISpeciesContainer
     {
-        public int? SpeciesId { get; }
+        public int SpeciesId { get; }
     }
 }

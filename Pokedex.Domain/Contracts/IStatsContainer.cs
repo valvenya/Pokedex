@@ -4,11 +4,11 @@ namespace Pokedex.Domain.Contracts
 {
     public interface IStatsContainer
     {
-        protected List<int> BaseStats { get; }
+        protected IList<int> BaseStats { get; }
         
-        public List<int> IV { get; set; }
+        public IList<int> IV { get; set; }
         
-        public List<int> EV { get; set; }
+        public IList<int> EV { get; set; }
         
         public int Level { get; set; }
 
