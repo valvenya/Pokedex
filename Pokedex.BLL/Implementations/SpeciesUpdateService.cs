@@ -6,7 +6,7 @@ using Pokedex.Domain.Models;
 
 namespace Pokedex.BLL.Implementations
 {
-    public class SpeciesUpdateService
+    public class SpeciesUpdateService : ISpeciesUpdateService
     {
         private ISpeciesDataAccess SpeciesDataAccess { get; }
         private IMoveGetService MoveGetService { get;  }

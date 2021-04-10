@@ -37,26 +37,23 @@ namespace Pokedex.DataAccess.Implementations
 
             return await Context.Pokemon
                 .Include(p => p.Species)
-                .Include(p => p.Move1)
-                .Include(p => p.Move2)
-                .Include(p => p.Move3)
-                .Include(p => p.Move4)
+                .Include(p => p.Moves)
                 .FirstOrDefaultAsync(p => p.Id == pokemonId.Id);
         }
         public async Task<IEnumerable<Pokemon>> GetAsync()
         {
             return Mapper.Map<IEnumerable<Pokemon>>(await Context.Pokemon
                 .Include(p => p.Species)
-                .Include(p => p.Move1)
-                .Include(p => p.Move2)
-                .Include(p => p.Move3)
-                .Include(p => p.Move4)
+                .Include(p => p.Moves)
                 .ToListAsync());
         }
 
         public async Task<Pokemon> InsertAsync(PokemonUpdateModel pokemon)
         {
-            var result = await Context.AddAsync(Mapper.Map<Entities.Pokemon>(pokemon));
+            var pokemonEntity = Mapper.Map<Entities.Pokemon>(pokemon);
+            Context.AttachRange(pokemonEntity.Moves);
+            
+            var result = await Context.AddAsync(pokemonEntity);
 
             await Context.SaveChangesAsync();
 
@@ -68,6 +65,7 @@ namespace Pokedex.DataAccess.Implementations
             var existing = await Get(pokemon);
 
             var result = Mapper.Map(pokemon, existing);
+            Context.AttachRange(result.Moves);
 
             Context.Update(result);
             await Context.SaveChangesAsync();
@@ -78,6 +76,7 @@ namespace Pokedex.DataAccess.Implementations
         public async Task<Pokemon> RemoveAsync(IPokemonIdentity pokemonId)
         {
             var result = await Get(pokemonId);
+            Context.AttachRange(result.Moves);
 
             Context.Remove(result);
             await Context.SaveChangesAsync();

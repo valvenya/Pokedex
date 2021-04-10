@@ -13,7 +13,7 @@ namespace Pokedex.Domain
         
         public Type PrimaryType { get; set; }
         
-        public Type SecondaryType { get; set; }
+        public Type? SecondaryType { get; set; }
         
         public float Weight { get; set; }
         

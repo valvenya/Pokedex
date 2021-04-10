@@ -19,7 +19,7 @@ namespace Pokedex.DataAccess.Entities
         public Type? SecondaryType { get; set; }
         public float Weight { get; set; }
         public float Height { get; set; }
-        public IList<int> BaseStats { get; set; }
+        public int[] BaseStats { get; set; }
         
         public virtual ICollection<Move> MovePool { get; set; }
         public virtual ICollection<Pokemon> Pokemon { get; set; }

@@ -27,31 +27,13 @@ namespace Pokedex.DataAccess.Context
                     .WithMany(s => s.Pokemon)
                     .HasForeignKey(e => e.SpeciesId)
                     .HasConstraintName("FK_Pokemon_Species");
-                
-                entity.HasOne(e => e.Move1)
-                    .WithMany(m => m.Pokemon)
-                    .HasForeignKey(e => e.Move1Id)
-                    .HasConstraintName("FK_Pokemon_Move1");
-                
-                entity.HasOne(e => e.Move2)
-                    .WithMany(m => m.Pokemon)
-                    .HasForeignKey(e => e.Move2Id)
-                    .HasConstraintName("FK_Pokemon_Move2");
-                
-                entity.HasOne(e => e.Move3)
-                    .WithMany(m => m.Pokemon)
-                    .HasForeignKey(e => e.Move3Id)
-                    .HasConstraintName("FK_Pokemon_Move3");
-                
-                entity.HasOne(e => e.Move4)
-                    .WithMany(m => m.Pokemon)
-                    .HasForeignKey(e => e.Move4Id)
-                    .HasConstraintName("FK_Pokemon_Move4");
+
+                entity.HasMany(e => e.Moves)
+                    .WithMany(e => e.Pokemon);
 
                 entity.Property(e => e.Level).IsRequired();
                 entity.Property(e => e.Nature).IsRequired();
                 entity.Property(e => e.SpeciesId).IsRequired();
-                entity.Property(e => e.Move1Id).IsRequired();
                 entity.Property(e => e.IV).IsRequired();
                 entity.Property(e => e.EV).IsRequired();
             });
