@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Pokedex.BLL\Pokedex.BLL.csproj" />
+      <ProjectReference Include="..\Pokedex.Client\Pokedex.Client.csproj" />
+      <ProjectReference Include="..\Pokedex.DataAccess\Pokedex.DataAccess.csproj" />
+      <ProjectReference Include="..\Pokedex.Domain\Pokedex.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0-preview.3.21201.4" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0-preview2" />
+    </ItemGroup>
+
+</Project>
