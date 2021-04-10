@@ -19,7 +19,7 @@ namespace Pokedex.Domain
         
         public Nature Nature { get; set; }      
         
-        public ICollection<Move> Moves { get; }
+        public ICollection<Move> Moves { get; set; }
         
         public IList<int> IV { get; set; }
         

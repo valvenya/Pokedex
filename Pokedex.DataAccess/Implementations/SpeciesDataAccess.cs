@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.Internal;
 using Microsoft.EntityFrameworkCore;
 using Pokedex.DataAccess.Context;
 using Pokedex.DataAccess.Contracts;
@@ -49,12 +51,17 @@ namespace Pokedex.DataAccess.Implementations
         public async Task<Species> InsertAsync(SpeciesUpdateModel species)
         {
             var speciesEntity = Mapper.Map<Entities.Species>(species);
-            Context.AttachRange(speciesEntity.MovePool);
             
-            var result = await Context.AddAsync(speciesEntity);
+            var moves = Context.Move.Where(m => species.MoveIds.Contains(m.Id)).ToList();
+            foreach (var move in moves)
+            {
+                speciesEntity.MovePool.Add(move);
+            }
+            
+            var result = await Context.Species.AddAsync(speciesEntity);
             await Context.SaveChangesAsync();
 
-            return Mapper.Map<Species>(result);
+            return Mapper.Map<Species>(result.Entity);
         }
 
         public async Task<Species> UpdateAsync(SpeciesUpdateModel species)
@@ -62,7 +69,14 @@ namespace Pokedex.DataAccess.Implementations
             var existing = await Get(species);
 
             var result = Mapper.Map(species, existing);
-            Context.AttachRange(result.MovePool);
+            
+            result.MovePool.Clear();
+            var moves = Context.Move.Where(m => species.MoveIds.Contains(m.Id)).ToList();
+            foreach (var move in moves)
+            {
+                result.MovePool.Add(move);
+            }
+            
             Context.Update(result);
 
             await Context.SaveChangesAsync();

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -51,13 +51,18 @@ namespace Pokedex.DataAccess.Implementations
         public async Task<Pokemon> InsertAsync(PokemonUpdateModel pokemon)
         {
             var pokemonEntity = Mapper.Map<Entities.Pokemon>(pokemon);
-            Context.AttachRange(pokemonEntity.Moves);
+            
+            var moves = Context.Move.Where(m => pokemon.MoveIds.Contains(m.Id)).ToList();
+            foreach (var move in moves)
+            {
+                pokemonEntity.Moves.Add(move);
+            }
             
             var result = await Context.AddAsync(pokemonEntity);
 
             await Context.SaveChangesAsync();
 
-            return Mapper.Map<Pokemon>(result);
+            return Mapper.Map<Pokemon>(result.Entity);
         }
 
         public async Task<Pokemon> UpdateAsync(PokemonUpdateModel pokemon)
@@ -65,7 +70,13 @@ namespace Pokedex.DataAccess.Implementations
             var existing = await Get(pokemon);
 
             var result = Mapper.Map(pokemon, existing);
-            Context.AttachRange(result.Moves);
+            
+            result.Moves.Clear();
+            var moves = Context.Move.Where(m => pokemon.MoveIds.Contains(m.Id)).ToList();
+            foreach (var move in moves)
+            {
+                result.Moves.Add(move);
+            }
 
             Context.Update(result);
             await Context.SaveChangesAsync();
@@ -76,8 +87,7 @@ namespace Pokedex.DataAccess.Implementations
         public async Task<Pokemon> RemoveAsync(IPokemonIdentity pokemonId)
         {
             var result = await Get(pokemonId);
-            Context.AttachRange(result.Moves);
-
+            
             Context.Remove(result);
             await Context.SaveChangesAsync();
 
